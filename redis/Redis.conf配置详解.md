@@ -108,11 +108,10 @@
    # redis的最大内存容量
    maxmemory <bytes>
    
-   
    # 内存到达上限后的处理策略
    maxmemory-policy noeciction
    ```
-
+   
 6.  AOF配置（APPEND ONLY MODE）
    
    1. 默认不开启aof模式 默认使用的是rdb方式持久化
@@ -129,8 +128,9 @@
       
       # 每秒执行一次sync（同步） 可能会丢失这1s的数据
       appendfsync everysc
+      
       # 每次修改都会sync 同步 消耗性能
       appendfsync always
       ```
-   
+      
    4. 

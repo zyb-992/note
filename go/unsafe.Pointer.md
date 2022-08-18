@@ -5,7 +5,7 @@
 1. Go中不同类型的指针不能相互转换
    
    ```go
-   # 错误示例
+   // 错误示例
    func main(){
        num := 4
        numPointer := &num
@@ -14,7 +14,7 @@
        fmt.Println(flunm)
    }    
    
-    # 报错
+    // 报错
    
    connot convert numPointer(type *int) to type *float32
    ```
@@ -58,5 +58,4 @@
    3. `uintptr` 类型是不能存储在临时变量中的。因为从 GC 的角度来看，`uintptr` 类型的临时变量只是一个无符号整数，并不知道它是一个指针地址
 
 4. 普通指针具体类型就是`uintptr`
-
 
