@@ -15,10 +15,9 @@
    }    
    
     // 报错
-   
    connot convert numPointer(type *int) to type *float32
    ```
-
+   
 2. **unsafe.Pointer**：
    
    1. 表示任意类型且可寻址的指针值
