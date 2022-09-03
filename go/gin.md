@@ -169,7 +169,6 @@ func (engine *Engine) addRoute(method, path string, handlers HandlersChain) {
 
 //  node 的结构体定义，发现就是自己嵌套自己的一个结构体
 // handlers 成员的数据类型（HandlersChain）本质就是 []func(*gin.Context)
-// 路由的存储模型是一个树形结构，每个节点都有自己路由路径以及回调函数 handlers
 type node struct {
 	path      string
 	indices   string
