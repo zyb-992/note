@@ -18,13 +18,15 @@
    docker run [参数] [REPOSITORY]:[TAG]/[IMAGE ID] [COMMAND]
    # 参数
    -d : 容器在宿主机以后台方式运行
-   -i : 进行交互式操作
+   -i : 进行交互式操作 打开
    -t : 以伪终端tty方式运行
    -p : 指定容器开放给外部的端口号
    --name : 给容器命名
    --restrart : always->容器退出时自动重启容器 / 
    			on-failure->当容器退出代码非0时才会自动重启
    # docker run --name my-redis -d redis
+   
+   
    # 在容器中运行镜像ubuntu标签为18.04 并通过交互式的SHELL运行
    # docker run -i -t ubuntu:18.04 /bin/bash
    
