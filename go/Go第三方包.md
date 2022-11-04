@@ -198,4 +198,12 @@
 
    
 
+   # Validator
    
+   > Go每日一库 [Go 每日一库之 validator - 大俊的博客 (darjun.github.io)](https://darjun.github.io/2020/04/04/godailylib/validator/)
+   >
+   > GitHub https://github.com/go-playground/validator
+   >
+   > 官方文档 https://pkg.go.dev/github.com/go-playground/validator/v10#FieldError
+
+1. 

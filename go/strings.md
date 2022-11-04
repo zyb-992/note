@@ -4,7 +4,80 @@
 
 ## strings标准库
 
-1. 
+1. `HasPrefix`
+
+   - 判断s是否有前缀字符串prefix
+
+   > ```go
+   > func HasPrefix(s, prefix string) bool
+   > ```
+
+   ```go
+   ```
+
+   
+
+2. `HasSuffix`
+
+   - 判断s是否有后缀字符串suffix
+
+   > ```go
+   > func HasSuffix(s, suffix string) bool
+   > ```
+
+   ```go
+   
+   ```
+
+   
+
+3. `Contains`
+
+   - 判断字符串s是否包含子字符串substr
+
+   > ```go
+   > func Contains(s, substr string) bool
+   > ```
+
+   ```go
+   ```
+
+   
+
+4. `ContainsAny`
+
+   - 判断字符串s是否包含字符串chars中的任一字符	
+
+   > ```go
+   > func ContainsAny(s, chars string) bool
+   > ```
+
+   ```go
+   ```
+
+   
+
+5. `Count`
+
+   - 返回字符串中有几个不重复的sep字串
+
+   > ```go
+   > func ContainsAny(s, chars string) bool
+   > ```
+
+   ```go
+   ```
+
+
+
+
+6. `ReplaceAll`
+
+   - 将s中出现的old字符串替换为new字符串
+
+   > ```go
+   > func ReplaceAll(s, old, new string) string 
+   > ```
 
 ## bytes标准库
 
@@ -114,7 +187,7 @@ type Buffer struct {
    ```go
    // Go语言中File实现了Reader和Writer接口
    // 打开文件，返回文件实例File指针
-   file, err := os.Open('1.txt')  
+   file, err := os.Open("1.txt")  
    if err != nil {
      fmt.Println(err)
    }

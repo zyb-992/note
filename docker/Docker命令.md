@@ -56,10 +56,8 @@
    docker tag [REPOSITORY]/[IMAGE ID] [REPOSITORY]:[TAG]
    # docker tag 860c279d2fec zyb/ubuntu:v1
    
-   
-   
    ```
-
+   
    
 
 2.  **基础命令**
@@ -94,7 +92,7 @@
    # 查看容器内部正在运行的进程
    docker top [container]
    
-   # 在容器内部额外启动新进程
+   # 在容器内部额外启动新的镜像进程
    docker exec [OPTIONS] [container] [COMMAND]
    # 参数
    -d : 运行一个后台进程 指定的是在内部执行COMMAND的容器名以及要执行的COMMAND

@@ -109,7 +109,7 @@
       Context
    
       mu       sync.Mutex            // protects following fields
-      done     atomic.Value        // created lazily, closed by first cancel call
+      done     atomic.Value          // created lazily, closed by first cancel call
       children map[canceler]struct{} // set to nil by the first cancel call
       err      error                 // set to non-nil by the first cancel call
    }
@@ -141,7 +141,7 @@
 
    **绑定父子结点的取消关系**
 
-   ① 当祖先继承链里没有 cancelCtx 或 timerCtx 等实现时，Done()方法总是返回 nil，可以作为前置判断
+   ① **当祖先继承链里没有 cancelCtx 或 timerCtx 等实现时，Done()方法总是返回 nil，可以作为前置判断**
 
    ② parentCancelCtx 取的是可以取消的最近祖先节点
 
@@ -156,6 +156,7 @@
       }
    
       select {
+          //判断一下父cancelCtx结点是否已经完成且取消了
       case <-done:
          // 父节点已取消就直接取消子节点，无需移除是因为父子关系还没加到parent.children
          // parent is already canceled
@@ -220,13 +221,13 @@
    	return value(c.Context, key)
    }
    ```
-
-   <img src="C:\Users\zyb\AppData\Roaming\Typora\typora-user-images\image-20220823162516497.png" alt="image-20220823162516497" style="zoom:67%;" />
-
    
-
+   <img src="C:\Users\zyb\AppData\Roaming\Typora\typora-user-images\image-20220823162516497.png" alt="image-20220823162516497" style="zoom:67%;" />
+   
+   
+   
    **cancel函数实现**
-
+   
    ```go
    // cancel closes c.done, cancels each of c's children, and, if
    // removeFromParent is true, removes c from its parent's children.
@@ -281,11 +282,11 @@
    }
    
    ```
-
+   
    Done函数
-
+   
    ```go
    // 若父context不为cancelCtx 那么会往上追溯 直到找到类型为cancelCtx的context才返回 否则返回nil
    ```
-
+   
    

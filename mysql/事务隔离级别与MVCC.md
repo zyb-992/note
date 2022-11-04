@@ -15,8 +15,6 @@
    - 中止的
    - 提交的
 
-   ![image-20220901153950518](D:\Program Files\电子书\go\md\图片\image-20220901153950518.png)
-
 3. 开启事务
 
    ```mysql
@@ -119,7 +117,7 @@
 - **REPEATABLE READ ：可重复读**
 - **SERIALIZABLE ：可串行化**
 
-![image-20220901164356974](D:\Program Files\电子书\go\md\图片\image-20220901164356974.png)
+![image-20220901164356974](https://raw.githubusercontent.com/zyb-992/Photobed/master/zyb/202209111655788.png)
 
 - 脏写现象对一致性问题印象太严重 无论哪种隔离级别 都不允许脏写的情况发生	
 
@@ -135,7 +133,7 @@
    show variables like 'transaction_isolation';
    ```
 
-![image-20220901170722695](D:\Program Files\电子书\go\md\图片\image-20220901170722695.png)
+![image-20220901170722695](https://raw.githubusercontent.com/zyb-992/Photobed/master/zyb/202209111655789.png)
 
 
 

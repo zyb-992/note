@@ -21,8 +21,6 @@
        ./name.sh 
        ```
 
-       
-
      - 作为解释器参数 **这种方式不需要在脚本程序的第一行中指定解释器信息**
 
        ```shell
@@ -361,30 +359,29 @@ arr_name=(value1  value2  value3...)
          if test [ $var1 \> $var2] # 正确
          ```
 
-         - 在test中 大写字母默认是小于小写字母的 比较测试中使用的是标准的ASCII顺序
-
-
-       | 参数      | 说明                     |
-       | --------- | ------------------------ |
-       | =         | 等于则为真               |
-       | !=        | 不相等则为真             |
-       | -z 字符串 | 字符串的长度为零则为真   |
-       | -n 字符串 | 字符串的长度不为零则为真 |
-    
-     - **文件测试**
-    
-       | 参数                |           | 说明                                 |
-       | :------------------ | --------- | :----------------------------------- |
-       | -e 文件名           | exist     | 如果文件存在则为真                   |
-       | -r 文件名           | read      | 如果文件存在且可读则为真             |
-       | -w 文件名           | write     | 如果文件存在且可写则为真             |
-       | -x 文件名           | execute   | 如果文件存在且可执行则为真           |
-       | -s 文件名           | least     | 如果文件存在且至少有一个字符则为真   |
-       | -d 文件名           | directory | 如果文件存在且为目录则为真           |
-       | -f 文件名           | file      | 如果文件存在且为普通文件则为真       |
-       | -c 文件名           | char      | 如果文件存在且为字符型特殊文件则为真 |
-       | -b 文件名           | block     | 如果文件存在且为块特殊文件则为真     |
-       | 文件名1 -nt 文件名2 | new than  | 判断文件1是否比文件2日期上更新       |
+         - 在test中 大写字母默认是小于小写字母的 比较使用的是标准的ASCII顺序
+         
+         - |   参数    |           说明           |
+           | :-------: | :----------------------: |
+           |     =     |        等于则为真        |
+           |    !=     |       不相等则为真       |
+           | -z 字符串 |  字符串的长度为零则为真  |
+           | -n 字符串 | 字符串的长度不为零则为真 |
+         
+          - **文件测试**
+         
+            |        参数         |           |                 说明                 |
+            | :-----------------: | :-------: | :----------------------------------: |
+            |      -e 文件名      |   exist   |          如果文件存在则为真          |
+            |      -r 文件名      |   read    |       如果文件存在且可读则为真       |
+            |      -w 文件名      |   write   |       如果文件存在且可写则为真       |
+            |      -x 文件名      |  execute  |      如果文件存在且可执行则为真      |
+            |      -s 文件名      |   least   |  如果文件存在且至少有一个字符则为真  |
+            |      -d 文件名      | directory |      如果文件存在且为目录则为真      |
+            |      -f 文件名      |   file    |    如果文件存在且为普通文件则为真    |
+            |      -c 文件名      |   char    | 如果文件存在且为字符型特殊文件则为真 |
+            |      -b 文件名      |   block   |   如果文件存在且为块特殊文件则为真   |
+            | 文件名1 -nt 文件名2 | new than  |    判断文件1是否比文件2日期上更新    |
 
    - Shell 还提供了与( -a )、或( -o )、非( ! )三个逻辑操作符用于将测试条件连接起来，其优先级为： **!** 最高， **-a** 次之， **-o** 最低。
 
@@ -416,9 +413,6 @@ arr_name=(value1  value2  value3...)
      fi	
      ```
 
-     
-
-     
 
 2. `if` 
 
@@ -440,27 +434,27 @@ arr_name=(value1  value2  value3...)
    - `if`和`test`连用
      - if中条件判断一般都是shell命令 
      - test语句可以在if中测试其他条件
-
-
-   ```shell
-   if test [$a -eq $b]
-   then
-   	...
-   else
-   	...
-   fi
-   ```
-
-   - 使用(())作为判断语句
-
-   ```shell
-   if (( $a == $b ))
-   then 
-   	echo "a = b"
-   else
-   	echo "a != b"
-   fi
-   ```
+   
+     ```shell
+     if test [$a -eq $b]
+     then
+     	...
+     else
+     	...
+     fi
+     ```
+   
+      - 使用(())作为判断语句
+   
+        ```shell
+        if (( $a == $b ))
+        then 
+        	echo "a = b"
+        else
+        	echo "a != b"
+        fi
+        ```
+   
 
    - 使用 `&&` 或者 `||`来进行组合命令测试
 
@@ -495,7 +489,6 @@ arr_name=(value1  value2  value3...)
      fi
      ```
 
-     
 
 3. `for`
 
@@ -512,22 +505,20 @@ arr_name=(value1  value2  value3...)
      done
      ```
 
-     
-
    - 更改字段分隔符
 
      - 特殊的环境变量 `IFS`
-     - **在脚本中修改IFS使其能正确输出带有空格或制表符的数据**
-
+  - **在脚本中修改IFS使其能正确输出带有空格或制表符的数据**
+   
      ```shell
-     # 告诉Shell脚本在数据值中忽略空格以及制表符 
+  # 告诉Shell脚本在数据值中忽略空格以及制表符 
      IFS=$'\n' 
      ```
-
+   
      
 
    ```shell
-   for var in item1 item2 ... itemN
+for var in item1 item2 ... itemN
    do
        command1
        command2
@@ -535,17 +526,17 @@ arr_name=(value1  value2  value3...)
        commandN
    done
    ```
-
+   
    - 写成一行
 
    ```shell
-   for var in item1 item2 ... itemN; do command1; command2… done;
+for var in item1 item2 ... itemN; do command1; command2… done;
    ```
-
+   
    - 顺序输出字符串中的字符
 
    ```shell
-   #!/bin/bash
+#!/bin/bash
    
    # 不写成 "for str in This is a string"
    for str in This is a string
@@ -553,7 +544,7 @@ arr_name=(value1  value2  value3...)
        echo $str
    done
    ```
-
+   
    
 
 4. while
@@ -595,12 +586,11 @@ arr_name=(value1  value2  value3...)
        for state in $(car $file)
        ```
      
-       
      - **命令替换** 等同于`cmd`，shell扫描一遍命令行，发现了$(cmd)结构，便将$(cmd)中的cmd执行一次，得到其标准输出，再将此输出放到原来命令。有些shell不支持，如tcsh。
      - **用于初始化数组** 如：array=(a b c d)
      
    - 使用`(())`时解释器应该为bash 否则提示未找到变量等错误信息
-
+   
    ```shell
    #!/bin/bash
    a=10
@@ -614,20 +604,20 @@ arr_name=(value1  value2  value3...)
    # 输入命令 bash if.sh
    # 输入 sh if.sh会出错
    ```
-
+   
    - 使用`[]`执行基本的算数运算，同时也是与test命令同义的特殊bash命令
-
+   
    - 使用`[[]]`用于条件判断结构
-
+   
      - &&、||、<和> 操作符能够正常存在于[[ ]]条件判断结构中，但是如果出现在[ ]结构中的话，会报错。
-
+   
      ```shell
      if [ $a -ne 1] && [ $a != 2 ]   
      if [[ $a != 1 && $a != 2]]
      ```
-
+   
      
-
+   
 6. `case`
 
    ```shell

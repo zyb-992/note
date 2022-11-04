@@ -1,6 +1,6 @@
 # Dockerfile
 
-1. 执行docker build命令时 Dockerfile中所有指令都会被执行并且提交 在该命令执行成功后返回一个新的镜像
+1. 执行`docker build`命令时 Dockerfile中所有指令都会被执行并且提交 在该命令执行成功后返回一个新的镜像
 
 2. FROM
 
@@ -20,21 +20,22 @@
 
 3. CMD：创建容器时会执行的命令
    1. CMD在Dockerfile中只允许有一条 若有多条则按最后一条的CMD命令执行
+   
    2. CMD主要用途是在最后运行的容器中执行命令
-
-```shell
-# 三种形式
-# exec form
-CMD ["executable", "param_1", "param_2"] 
-# 作为默认参数传递给ENTRYPOINT
-CMD ["param_1", "param_2"]
-# shell form
-CMD command param_1 param_2
-# CMD [ "bin/bash" ]
-# sudo docker run -i -t zyb/test 
-# 相当于 sudo docker run -i -t zyb/test bin/bash
-# -> root@aseauiewb24:/#
-```
+   
+      ```shell
+      # 三种形式
+      # exec form
+      CMD ["executable", "param_1", "param_2"] 
+      # 作为默认参数传递给ENTRYPOINT
+      CMD ["param_1", "param_2"]
+      # shell form
+      CMD command param_1 param_2
+      # CMD [ "bin/bash" ]
+      # sudo docker run -i -t zyb/test 
+      # 相当于 sudo docker run -i -t zyb/test bin/bash
+      # -> root@aseauiewb24:/#
+      ```
 
 4. RUN：用于在当前镜像中执行指令
 

@@ -241,3 +241,86 @@
 
   
 
+2. Handle和HandlerFunc
+
+   - 例子
+
+     ```go
+     // Handle
+     type ServeHttp struct {
+     }
+     
+     func (s ServeHttp) ServeHTTP(w http.ResponseWriter, request *http.Request) {
+     	w.Write([]byte(request.URL.Path))
+     }
+     
+     // HandlerFunc 
+     func indexHandler(w http.ResponseWriter, request *http.Request) {
+         w.Write([]byte("hello"))
+     }
+     
+     func main(){
+         s := ServeHttp{}
+     	http.Handle("/test", s)
+         http.HandleFunc("/testfunc", indexHandler)
+     }
+     ```
+
+   - 调用**Handle方法**
+
+     - 参数：
+       - 路由路径
+       - **Handler**接口
+     - 含义：Handler为接口，当调用Handler时，注册该路由路径以及`Handler`接口(注册到`DefaultServeMux`的m哈希表中)，当客户端访问到该路由路径时，那么此时会调用到该Handler接口中的`ServeHTTP`的方法
+
+     ```go
+     type Handler interface {
+         ServeHttp(ResponseWriter, *Request)
+     }
+     func Handle(pattern string, handler Handler) { DefaultServeMux.Handle(pattern, handler) }
+     ```
+
+     
+
+   - 调用**HandlerFunc方法**
+
+     ```go
+     // step1：调用http包内置包多路复用器的HandleFunc
+     func HandleFunc(pattern string, handler func(ResponseWriter, *Request)) {
+     	DefaultServeMux.HandleFunc(pattern, handler)
+     }
+     // step2：判断对应的处理方法是否为nil并通过Handle方法进行注册
+     func (mux *ServeMux) HandleFunc(pattern string, handler func(ResponseWriter, *Request)) {
+     	if handler == nil {
+     		panic("http: nil handler")
+     	}
+         // HandlerFunc：将handler类型转换为http包内置的HandlerFunc，其实现了Handler实现的ServeHTTP方法
+     	mux.Handle(pattern, HandlerFunc(handler))
+     }
+     
+     type Handler interface {
+     	ServeHTTP(ResponseWriter, *Request)
+     }
+     
+     type HandlerFunc func(ResponseWriter, *Request)
+     // ServeHTTP calls f(w, r).
+     func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
+         // 函数zi'ji
+     	f(w, r)
+     }
+     
+     // step3：开始注册路由路径以及对应的处理方法
+     func (mux *ServeMux) Handle(pattern string, handler Handler) {
+     	e := muxEntry{h: handler, pattern: pattern}
+     	mux.m[pattern] = e
+     }
+     // type handler
+     type muxEntry struct {
+     	h       Handler
+     	pattern string
+     }
+     ```
+
+     
+
+3. 

@@ -25,12 +25,12 @@
 
       系统调用直到数据报到达且复制到应用进程缓冲区或错误时才返回（不阻塞  
 
-![](D:\Program%20Files\电子书\go\md\image\2022-07-24-22-58-57-image.png)
+![](https://raw.githubusercontent.com/zyb-992/Photobed/master/zyb/202209111656833.png)
 
    2-  **非阻塞式IO模型**
 
       将套接字设置为非阻塞是通知内核：当请求的IO操作需要把进程投入睡眠才能完成时 不用将进程投入睡眠 而是返回一个错误 如此反复轮询 直到数据准备好 此时复制到应用进程缓冲区 然后recvfrom系统调用成功返回 
-    
+
 
   			![	](D:\Program%20Files\电子书\go\md\image\2022-07-24-22-59-07-image.png)		
 
@@ -41,12 +41,12 @@
       
       `调用select监视 -> 返回 -> 调用recvfrom读取`
       
-    
 
-​		  ![](D:\Program%20Files\电子书\go\md\image\2022-07-24-22-59-15-image.png)			   
+
+​		  ![](https://raw.githubusercontent.com/zyb-992/Photobed/master/zyb/202209111656834.png)			   
 
 4.  **信号驱动式IO**
-           ![](D:\Program%20Files\电子书\go\md\image\2022-07-24-22-59-25-image.png)
+           ![](https://raw.githubusercontent.com/zyb-992/Photobed/master/zyb/202209111656835.png)
 
       使用信号 当内核在描述符准备就绪（可读 发送SIGIO信号通知客户
 
@@ -60,7 +60,7 @@
       
       - 信号驱动式IO是内核告知我们数据准备好了 可以启动某个IO操作进行数据读取
 
-​		  ![](D:\Program%20Files\电子书\go\md\image\2022-07-24-22-59-41-image.png)	
+​		  ![](https://raw.githubusercontent.com/zyb-992/Photobed/master/zyb/202209111656836.png)	
 
 ## IO模型比较
 
@@ -74,7 +74,7 @@
   
   - 异步IO模型
 
-![](D:\Program%20Files\电子书\go\md\image\2022-07-24-22-54-18-image.png)
+![](https://raw.githubusercontent.com/zyb-992/Photobed/master/zyb/202209111656837.png)
 
 
 
@@ -84,7 +84,7 @@
 
 1. 
 
-![](D:\Program%20Files\电子书\go\md\image\2022-07-24-23-35-37-image.png)
+![](https://raw.githubusercontent.com/zyb-992/Photobed/master/zyb/202209111656838.png)
 
-![](D:\Program%20Files\电子书\go\md\image\2022-07-24-23-35-29-image.png)
+![](https://raw.githubusercontent.com/zyb-992/Photobed/master/zyb/202209111656839.png)
 
