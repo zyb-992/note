@@ -15,29 +15,45 @@
    ARG CODE_VERSION=latest
    FROM base:${CODE_VERSION} 
    # -> FROM base:latest
-   
    ```
 
-3. CMD：创建容器时会执行的命令
-   1. CMD在Dockerfile中只允许有一条 若有多条则按最后一条的CMD命令执行
    
-   2. CMD主要用途是在最后运行的容器中执行命令
-   
-      ```shell
-      # 三种形式
-      # exec form
-      CMD ["executable", "param_1", "param_2"] 
-      # 作为默认参数传递给ENTRYPOINT
-      CMD ["param_1", "param_2"]
-      # shell form
-      CMD command param_1 param_2
-      # CMD [ "bin/bash" ]
-      # sudo docker run -i -t zyb/test 
-      # 相当于 sudo docker run -i -t zyb/test bin/bash
-      # -> root@aseauiewb24:/#
-      ```
 
-4. RUN：用于在当前镜像中执行指令
+3. CMD：容器启动时会执行的命令
+   1. CMD在Dockerfile中只允许有一条 若有多条则按最后一条的CMD命令执行
+
+   2. CMD主要用途是在最后运行的容器中执行命令
+
+
+   ```shell
+   # 三种形式
+   
+   # exec form
+   # 参数以json数组格式进行编写
+   # 以JSON格式解析 所以传递需要加双引号 不是单引号
+   CMD ["executable", "param_1", "param_2"]
+   # 使用exec form时，与外壳窗体不同，exec窗体不调用命令外壳(shell)。这意味着不会发生正常的外壳处理
+   # 例如，CMD [ “echo”， “$HOME” ] 不会对$HOME进行变量替换。
+   # 如果你想要 shell 处理，要么使用 shell 形式，要么直接执行 shell
+   # 例如：CMD [ “sh”， “-c”， “echo $HOME” ]。
+   # 当使用exec表单并直接执行shell时，就像 shell 形式一样，是shell在执行环境变量扩展，而不是docker
+   
+   # 作为默认参数传递给ENTRYPOINT
+   # 这种写法下Dockerfile必须要用ENTRYPOINT存在
+   CMD ["param_1", "param_2"]
+   # 例如
+   # ENTRYPOINT ["ls", "-a"]
+   # CMD ["-l"] 
+   # 相当于在容器中执行ls -a -l
+   
+   # shell form
+   # 这种形式 命令将在shell外壳下进行：/bin/sh -c command 
+   CMD command param_1 param_2
+   ```
+
+   
+
+4. RUN：用于在当前镜像层中执行指令
 
    ```shell
    # 两种形式
@@ -68,8 +84,8 @@
 
 5. EXPOSE：告诉Docker该容器运行时需要监听哪些指定的网络端口
 
-   1. 只是暴露了运行该镜像时的容器的端口
-   2. 在docker run时还是 需要指定-p选项来指定端口绑定
+   1. 使用EXPOSE只是公开了运行容器的端口，使得docker daemon在该容器运行时可以监听该端口
+   2. 在`docker run`时还是 需要指定-p选项来指定端口绑定
 
    ```shell
    # 格式
@@ -104,53 +120,57 @@
    docker image inspect --format='' myimage
    ```
 
-   
-
 7. ENV： 将环境变量设置为值 将出现在构建阶段的所有后续指令的环境中 在其他指令中以内联方式替换
 
    1. **使用ENV生成的环境变量最终会添加到最终生成的镜像中 因此当通过该镜像运行容器时 该环境变量也会起作用**
 
-```shell
-# 格式
-ENV <key>=<value>
+   ```shell
+   # 格式
+   ENV <key>=<value>
+   
+   # 例子
+   ENV MY_NAME="John Doe"
+   ENV MY_DOG=Rex\ The\ Dog
+   ENV MY_CAT=fluffy
+   
+   ENV MY_NAME="John Doe" MY_DOG=Rex\ The\ Dog \
+       MY_CAT=fluffy
+       
+   # 为单个命令设置环境变量
+   # 在此命令设置后下个命令执行以后新生成的镜像内就不会有之前定义的环境变量
+   ARG DEBIAN_FRONTEND=noninteractive
+   ```
 
-# 例子
-ENV MY_NAME="John Doe"
-ENV MY_DOG=Rex\ The\ Dog
-ENV MY_CAT=fluffy
-
-ENV MY_NAME="John Doe" MY_DOG=Rex\ The\ Dog \
-    MY_CAT=fluffy
-    
-# 为单个命令设置环境变量
-# 在此命令设置后下个命令执行后新生成的镜像内就不会有之前定义的环境变量
-ARG DEBIAN_FRONTEND=noninteractive
-```
+   
 
 8. ENTRYPOINT：容器入口点
 
-```shell
-# 2 forms
-# exec form
-ENTRYPOINT ["executable", "param_1", "param_2"]
-# 外壳形式
-ENTRYPOINT command param1 param2
+   ```shell
+   # 2 forms
+   # exec form
+   # 以JSON格式解析 所以传递需要加双引号 不是单引号
+   ENTRYPOINT ["executable", "param_1", "param_2"]
+   
+   # shell form
+   ENTRYPOINT command param1 param2
+   
+   
+   # 通过传递空字符串重置容器入口点
+   docker run -it --entrypoing="" mysql bash
+   
+   # 例子
+   # 编写Dockerfile
+   FROM redis:latest
+   ENTRYPOINT ["redis-cli","-p","6379"]
+   
+   # 构建新镜像
+   docker build -f dockerfile_test -t new_redis:v1 .
+   # 容器运行
+   docker run --entrypoint="redis-server" new_redis:v1
+   # 结果是运行了redis服务器
+   ```
 
-
-# 通过传递空字符串重置容器入口点
-docker run -it --entrypoing="" mysql bash
-
-# 例子
-# 编写Dockerfile
-FROM redis:latest
-ENTRYPOINT ["redis-cli","-p","6379"]
-
-# 构建新镜像
-docker build -f dockerfile_test -t new_redis:v1 .
-# 容器运行
-docker run --entrypoint="redis-server" new_redis:v1
-# 结果是运行了redis服务器
-```
+   
 
 **CMD和ENTRYPOINT的区别**
 
@@ -167,7 +187,7 @@ docker run --entrypoint="redis-server" new_redis:v1
 
   
 
-- ![image-20220805185410334](C:\Users\zyb\AppData\Roaming\Typora\typora-user-images\image-20220805185410334.png)
+- ![](D:\Program Files\电子书\go\md\图片\image-20221114200237569.png)
 
 8. ADD：用来将构建环境下的文件和目录复制到镜像中
 
@@ -203,7 +223,3 @@ docker run --entrypoint="redis-server" new_redis:v1
    COPY hom* /mydir/
    COPY home?.txt /mydir/
    ```
-
-   
-
-10. 

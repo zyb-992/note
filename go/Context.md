@@ -102,7 +102,7 @@
 
 5. `cancelCtx`
 
-   结构
+   - 结构
 
    ```go
    type cancelCtx struct {
@@ -124,7 +124,7 @@
    - **children : 存放该Context的子Context**
    - **err ：取消时的错误，超时或主动取消 未取消时为nil**
 
-   对外方法
+   - 对外方法
 
    ```go
    // 创建一个cancelCtx
