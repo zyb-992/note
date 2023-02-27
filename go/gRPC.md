@@ -114,13 +114,19 @@ message new {
 
 ![](D:\Program Files\电子书\go\md\图片\image-20221217155425626.png)
 
+## protobuf中的option是什么意思
 
+- package主要是用于避免命名冲突的，不同的项目（project）需要指定不同的package
+- option go_package： go_packge有两层意思，一层是表明如果要引用这个proto生成的文件的时候import后面的路径；一层是如果不指定--go_opt（默认值），生成的go文件存放的路径（go_opt是编译时的可选指令）
 
 ## 编译命令
 
 ```shell
 protoc --proto_path=IMPORT_PATH --go_out=DST_DIR path/to/file.proto
 protoc --proto_path=IMPORT_PATH --go-grpc_out=plugins=grpc:DST_DIR path/to/file.proto
+
+# 生成_grpc.pb.go文件
+protoc --go-grpc_out=DST_DIR *.proto 
 ```
 
 - *proto_path=IMPORT_PATH*,IMPORT_PATH是 .proto 文件所在的路径,如果忽略则默认当前目录
@@ -130,6 +136,12 @@ protoc --proto_path=IMPORT_PATH --go-grpc_out=plugins=grpc:DST_DIR path/to/file.
 - --go-grpc_out生成`file_grpc.pb.go`文件
 - DST_DIR：生成`pb.go`文件的文件路径（可使用相对路径）
 - path/to/file.proto：源proto文件
+
+> 例如，编译mutli.proto文件
+>
+> 使用` protoc --go_out=../mutli --go-grpc_out=../mutli ./mutli.proto`命令
+>
+> ![](D:\Program Files\电子书\go\md\图片\image-20230105203414023.png)
 
 ## 定义服务
 
@@ -141,3 +153,4 @@ service SearchService {
 }
 ```
 
+1个service对应一个客户端和一个服务端，不同服务之间的客户端和服务端不能互相调用

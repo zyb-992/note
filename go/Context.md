@@ -109,6 +109,8 @@
       Context
    
       mu       sync.Mutex            // protects following fields
+       // 没有调用cancelFunc时 done一直为空 只有父节点调用其自身的cancelFunc或Done函数或本身调用cancelFunc 
+       // done中的v类型才是对应的<-chan struct{}
       done     atomic.Value          // created lazily, closed by first cancel call
       children map[canceler]struct{} // set to nil by the first cancel call
       err      error                 // set to non-nil by the first cancel call
@@ -119,19 +121,19 @@
       Done() <-chan struct{}
    }
    ```
-
+   
    - **done : 用于判断该Context是否完成(被Cancel/超时)**
    - **children : 存放该Context的子Context**
    - **err ：取消时的错误，超时或主动取消 未取消时为nil**
 
    - 对外方法
-
+   
    ```go
    // 创建一个cancelCtx
    func withCancel(parent Context){
        // c.Context = parent
       c := newCancelCtx(parent)
-      // 将父节点的取消函数和子节点关联，做到父节点取消，子节点也跟着取消
+      // 将父节点的取消函数和子节点关联，做到父节点取消，子节点也跟着取消，没有的话新起一个协程进行监听该ctx
       propagateCancel(parent, &c)
       // 返回当前节点和主动取消函数（调用会将自身从父节点移除，并返回一个已取消错误）
       return &c, func() { c.cancel(true, Canceled) }
@@ -144,7 +146,7 @@
    ① **当祖先继承链里没有 cancelCtx 或 timerCtx 等实现时，Done()方法总是返回 nil，可以作为前置判断**
 
    ② parentCancelCtx 取的是可以取消的最近祖先节点
-
+   
    ```go
    // propagateCancel(parent, &c)
    // propagateCancel arranges for child to be canceled when parent is.

@@ -16,7 +16,7 @@
 2. `ls`
 
    | 参数 | 作用                           |
-| ---- | ------------------------------ |
+   | ---- | ------------------------------ |
    | -F   | 区分文件还是目录               |
    | -a   | 显示隐藏文件(以.为前缀的)      |
    | -R   | 当前目录下包含的子目录中的文件 |
@@ -24,19 +24,20 @@
    - 使用正则表达式
 
    ```shell
-# 查找my_scrapt以及my_script文件
-   ls -l my_scr[ai]pt
+   # 查找my_scrapt以及my_script文件
    
-   # 查找该索引下包含a\b\c--->到i的文件
-   ls -l my_scr[a-i]pt
+      ls -l my_scr[ai]pt
    
-   # 查找除了my_scrrpt之外的文件
-   ls -l my_scr[!r]pt
+      # 查找该索引下包含a\b\c--->到i的文件
+   
+      ls -l my_scr[a-i]pt
+   
+      # 查找除了my_scrrpt之外的文件
+   
+      ls -l my_scr[!r]pt
    ```
-   
-   ![image-20220916161132325](https://raw.githubusercontent.com/zyb-992/Photobed/master/zyb/202209161611352.png)
 
-   
+   ![image-20220916161132325](https://raw.githubusercontent.com/zyb-992/Photobed/master/zyb/202209161611352.png)
 
 3. `touch`
 
@@ -52,7 +53,6 @@
    ```shell
    # file2 为 创建的file1的软链接
    ln -s file1 file2
-   ```
 
    - 软链接在源文件被删除后就会消失 查询不到其中的内容
    - 软链接与源文件指向的innode编号不同
