@@ -47,7 +47,8 @@
 ### 通过Yaml或Json创建Pod
 
 - `kubectl create`与`kubectl apply`区别
-  - 
+  
+  
 - 
 
 ### 查看在Pod中运行的应用程序的日志

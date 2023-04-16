@@ -44,6 +44,7 @@ type RouterGroup struct {
 }
 type HandlersChain []HandlerFunc
 type HandlerFunc func ( *gin.Context)
+
 // Use函数: group.Handlers = append(group.Handlers, middleware...)
 // 由此得知Handlers是一个存储func ( *gin.Context)的切片 即存储中间件和路由的所有回调函数
 // 所以Use函数先将中间件的回调函数存储到Handlers这个切片中 等待调用
@@ -210,84 +211,82 @@ func (n *node) insertChild(path string, fullPath string, handlers HandlersChain)
 
 ### Gin路由背后的所有回调函数什么时候会执行
 
-1. 
+```go
+r := gin.Default()
 
-   ```go
-   r := gin.Default()
-   
-   r.Run()
-   
-   # Run
-   func (engine *Engine) Run(addr ...string) (err error) {
-      	// 省略部分代码
-        err = http.ListenAndServe(address, engine)
-       return
-   }
-   
-   # ListenAndServe
-   # addr:是IP:Port格式
-   // !!! 只要实现了该接口 传递实现的原型
-   // !!! Go官方的net库会回调该函数
-   type Handler interface {
-   	ServeHTTP(ResponseWriter, *Request)
-   }
-   func ListenAndServe(addr string, handler Handler) error {
-   	server := &Server{Addr: addr, Handler: handler}
-   	return server.ListenAndServe()
-   }
-   
-   
-   
-   func (engine *Engine) ServeHTTP (w http.ResponseWriter, req *http.Request) {
-   	// 初始化gin的Context上下文成员参数
-       // 省略部分代码
-       engine.handleHTTPRequest(c)
-   }
-   
-   func (engine *Engine) handleHTTPRequest(c *Context) {
-       	// 这里根据客户端实际请求的路径、参数，大小写不敏感模式去寻找已经注册的路由表中对应的回调函数
-       	value := root.getValue(rPath, c.params, unescape)
-   		if value.params != nil {
-   			c.Params = *value.params
-   		}
-   		if value.handlers != nil {
-              
-                //value.handlers  路由键对应的全部回调函数
-   			c.handlers = value.handlers
-               
-                // 路由全路径
-   			c.fullPath = value.fullPath
-          
-               // 最核心的东西，所有回调函数要开始执行了
-               // -----------------------------------
-   			c.Next()
-               // -----------------------------------
-   			c.writermem.WriteHeaderNow()
-   			return
-   		}
-   
-       
-       // 省略其他代码....
-   }
-   
-   // 根据Context中的路由全路径开始执行回调函数
-   func (c *Context) Next() {
-   	c.index++
-       
-       // 开发者在任何一个回调函数只要调用了 Abort 就会随时终止后面的回调函数执行
-       // 具体参见后面第 7 条，以及前文分析的最大回调函数总数量为：63 个
-   	for c.index < int8(len(c.handlers)) {
+r.Run()
+
+# Run
+func (engine *Engine) Run(addr ...string) (err error) {
+   	// 省略部分代码
+     err = http.ListenAndServe(address, engine)
+    return
+}
+
+# ListenAndServe
+# addr:是IP:Port格式
+// !!! 只要实现了该接口 传递实现的原型
+// !!! Go官方的net库会回调该函数
+type Handler interface {
+	ServeHTTP(ResponseWriter, *Request)
+}
+func ListenAndServe(addr string, handler Handler) error {
+	server := &Server{Addr: addr, Handler: handler}
+	return server.ListenAndServe()
+}
+
+
+
+func (engine *Engine) ServeHTTP (w http.ResponseWriter, req *http.Request) {
+	// 初始化gin的Context上下文成员参数
+    // 省略部分代码
+    engine.handleHTTPRequest(c)
+}
+
+func (engine *Engine) handleHTTPRequest(c *Context) {
+    	// 这里根据客户端实际请求的路径、参数，大小写不敏感模式去寻找已经注册的路由表中对应的回调函数
+    	value := root.getValue(rPath, c.params, unescape)
+		if value.params != nil {
+			c.Params = *value.params
+		}
+		if value.handlers != nil {
            
-           // 这里按照回调函数最开始的注册顺序，去执行.
-   		c.handlers[c.index](c)
-   		c.index++
-   	}
-   }
-   // 如果开发者在任何一个回调函数调用了本函数，那么 index 值瞬间就被设置为 63
-   func (c *Context) Abort() {
-       // abortIndex 为一个常量值：63
-   	c.index = abortIndex
-   }
-   ```
-   
-   ![image-20220803184442220](C:\Users\zyb\AppData\Roaming\Typora\typora-user-images\image-20220803184442220.png)
+             //value.handlers  路由键对应的全部回调函数
+			c.handlers = value.handlers
+            
+             // 路由全路径
+			c.fullPath = value.fullPath
+       
+            // 最核心的东西，所有回调函数要开始执行了
+            // -----------------------------------
+			c.Next()
+            // -----------------------------------
+			c.writermem.WriteHeaderNow()
+			return
+		}
+
+    
+    // 省略其他代码....
+}
+
+// 根据Context中的路由全路径开始执行回调函数
+func (c *Context) Next() {
+	c.index++
+    
+    // 开发者在任何一个回调函数只要调用了 Abort 就会随时终止后面的回调函数执行
+    // 具体参见后面第 7 条，以及前文分析的最大回调函数总数量为：63 个
+	for c.index < int8(len(c.handlers)) {
+        
+        // 这里按照回调函数最开始的注册顺序，去执行.
+		c.handlers[c.index](c)
+		c.index++
+	}
+}
+// 如果开发者在任何一个回调函数调用了本函数，那么 index 值瞬间就被设置为 63
+func (c *Context) Abort() {
+    // abortIndex 为一个常量值：63
+	c.index = abortIndex
+}
+```
+
+![image-20220803184442220](C:\Users\zyb\AppData\Roaming\Typora\typora-user-images\image-20220803184442220.png)
